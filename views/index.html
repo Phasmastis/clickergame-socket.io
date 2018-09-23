@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+
+	<h1 id="usersCount"></h1>
+
+	<div id="clicker" onclick="randomize()" style="background: black; height: 200px; width: 200px"></div>
+
+	<p id="totalClicks"></p>
+
+	<script
+  	src="https://code.jquery.com/jquery-3.3.1.min.js"
+  	integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+  	crossorigin="anonymous"></script>
+
+	<script src="/socket.io/socket.io.js"></script>
+	<script>
+
+		var socket = io();
+		var clicks = 0;
+
+		socket.on('connect', function(data){
+			console.log("You're connected");
+		});
+
+		socket.on('totalUsers', function(data){
+			$('#usersCount').text(data.usersCount);
+		});
+
+		socket.on('userdc', function(data){
+			$('#usersCount').text(data.usersCount);
+		});
+
+		$('#clicker').on('click', function(){
+			$(this).toggle("slow").css('background', '#' + Math.floor(Math.random() * 16777215).toString(16));
+			socket.emit('buttonClicked', {
+				totalClicks: clicks = clicks + 1
+			});
+		});
+
+		socket.on('clicksCountFromUsers', function(data){
+			$('#totalClicks').text(data.clicks);
+			clicks = data.clicks;
+		});
+
+		socket.on('totalClickedTimes', function(data){
+			$('#totalClicks').text(data.clicks);
+		});
+
+		socket.on('disconnect', function(){
+			console.log("User disconnected");
+		});	
+	</script>
+</body>
+</html>
