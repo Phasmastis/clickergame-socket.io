@@ -35,7 +35,7 @@
 		});
 
 		$('#clicker').on('click', function(){
-			$(this).toggle("slow").css('background', '#' + Math.floor(Math.random() * 16777215).toString(16));
+			$(this).css('background', '#' + Math.floor(Math.random() * 16777215).toString(16));
 			socket.emit('buttonClicked', {
 				totalClicks: clicks = clicks + 1
 			});
